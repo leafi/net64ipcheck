@@ -10,7 +10,7 @@ Server: Run the binary. It listens on port :6460 UDP.
 
 Consider a user attempting to start a server on port 8000. Their IP is 1.2.3.4.
 
-The first UDP packet sent to api.?????.com:6460 must be 400 bytes.
+The first UDP packet sent to napi.?????.com:6460 must be 400 bytes.
 
 It must contain the UTF-8 string `net64ipc0000`, followed by 2 bytes encoding the server port (typically 8000), and then the remaining 386 bytes can be anything.
 
@@ -18,21 +18,21 @@ The packet must be sent from the server port encoded in the message.
 
 **Wrong version scenario**
 
-1.2.3.4:8080 -> api.?????.com:6460   (sends garbage that's 400 bytes long)
+1.2.3.4:8080 -> napi.?????.com:6460   (sends garbage that's 400 bytes long)
 
-api.?????.com:6460 -> 1.2.3.4:8080   `BADVER`
+napi.?????.com:6460 -> 1.2.3.4:8080   `BADVER`
 
 **Wrong port scenario**
 
-1.2.3.4:8123 -> api.?????.com:6460   `net64ipc0000(binary short representing 5678)`
+1.2.3.4:8123 -> napi.?????.com:6460   `net64ipc0000(binary short representing 5678)`
 
-api.?????.com refuses to respond & ignores the request.
+napi.?????.com refuses to respond & ignores the request.
 
 **Correct version but port closed**
 
-1.2.3.4:8080 -> api.?????.com:6460    `net64ipc0000(binary short representing 8000)`
+1.2.3.4:8080 -> napi.?????.com:6460    `net64ipc0000(binary short representing 8000)`
 
-api.?????.com:6460 -> 1.2.3.4:8000    `OK 1.2.3.4`
+napi.?????.com:6460 -> 1.2.3.4:8000    `OK 1.2.3.4`
 
 (... packet never gets through to 1.2.3.4:8000 ...)
 
@@ -42,9 +42,9 @@ The client should consider sending 3 attempts 500ms apart for every "test" to de
 
 **Correct version and port open**
 
-1.2.3.4:8080 -> api.?????.com:6460    `net64ipc0000(binary short representing 8000)`
+1.2.3.4:8080 -> napi.?????.com:6460    `net64ipc0000(binary short representing 8000)`
 
-api.?????.com:6460 -> 1.2.3.4:8080    `OK 1.2.3.4`
+napi.?????.com:6460 -> 1.2.3.4:8080    `OK 1.2.3.4`
 
 Session ends.
 
